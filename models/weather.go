@@ -5,9 +5,10 @@ import "gorm.io/gorm"
 type Weather struct {
 	ID          uint     `gorm:"primary key;autoIncrement" json:"id"`
 	Temperature *float32 `json:"temp"`
-	City        *string  `json:"city"`
+	City        *string  `gorm:"unique;not null" json:"city"`
 	Lat         *float32 `json:"lat"`
-	Lng         *float32 `json:"lng"`
+	Long        *float32 `json:"lng"`
+	UserID      int64    `json:"user_id" gorm:"type:BIGINT"`
 }
 
 func MigrateWeather(db *gorm.DB) error {
