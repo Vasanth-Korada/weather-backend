@@ -17,9 +17,10 @@ type Credentials struct {
 	DOB      string `json:"dob"`
 }
 
-var secretKey = []byte(os.Getenv("gloresoft-samson"))
+var secretKey []byte
 
 func generateToken(userId int) (string, error) {
+	secretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 	if len(secretKey) == 0 {
 		return "", errors.New("secret key is empty")
 	}
@@ -35,18 +36,18 @@ func generateToken(userId int) (string, error) {
 func (r *Repository) handleLogin(c *fiber.Ctx) error {
 	var creds Credentials
 	if err := c.BodyParser(&creds); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request payload"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request payload"})
 	}
 
 	user, err := models.AuthenticateUser(r.DB, creds.Username, creds.Password)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid username or password"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": "Invalid username or password"})
 	}
 
 	token, err := generateToken(user.UserID)
 	if err != nil {
 		log.Printf("Token generation error: %v", err)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to generate token"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to generate token"})
 	}
 
 	return c.SendString(token)
@@ -55,17 +56,17 @@ func (r *Repository) handleLogin(c *fiber.Ctx) error {
 func (r *Repository) handleRegister(c *fiber.Ctx) error {
 	var creds Credentials
 	if err := c.BodyParser(&creds); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request payload"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request payload"})
 	}
 
 	if creds.Username == "" || creds.Password == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Username and Password are required"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Username and Password are required"})
 	}
 
 	err := models.RegisterUser(r.DB, creds.Username, creds.Password, creds.DOB)
 	if err != nil {
 		log.Printf("User registration error: %v", err)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to register user"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to register user"})
 	}
 
 	return c.Status(fiber.StatusCreated).SendString("User registered successfully")

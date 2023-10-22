@@ -18,7 +18,7 @@ import (
 var secretKey []byte
 
 func initializeConfig() (*storage.Config, error) {
-	requiredEnv := []string{"DB_HOST", "DB_PORT", "DB_PASS", "DB_USER", "DB_SSLMODE", "DB_NAME"}
+	requiredEnv := []string{"DB_HOST", "DB_PORT", "DB_PASS", "DB_USER", "DB_SSLMODE", "DB_NAME", "JWT_SECRET_KEY"}
 
 	for _, v := range requiredEnv {
 		if os.Getenv(v) == "" {
@@ -26,7 +26,7 @@ func initializeConfig() (*storage.Config, error) {
 		}
 	}
 
-	secretKey = []byte(os.Getenv("gloresoft-samson"))
+	secretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 	return &storage.Config{
 		Host:     os.Getenv("DB_HOST"),
