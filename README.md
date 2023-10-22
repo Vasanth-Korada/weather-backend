@@ -23,7 +23,7 @@ This project serves as a backend service for weather-related functionalities. It
     ```
 
 2. **Setup Database**:
-    - Create a database in MySQL named `weather_db`.
+    - Create a database in MySQL named `weathers`.
     - Import the SQL schema provided in the `sql` directory.
 
 3. **Environment Variables**: 
@@ -48,7 +48,9 @@ The server will start and listen on the port specified in the `.env` file.
 
 ## API Endpoints
 
-- **Fetch Weather**: `GET /api/weather/:city`
+- **Register**: `POST /api/register`
+- **Login**: `POST /api/login`
+- **Logout**: `POST /api/logout`
 - **Create Weather Record**: `POST /api/weather`
 - **Get Weather Search History**: `GET /api/history`
 - **Delete Weather Record**: `DELETE /api/weather/:id`
