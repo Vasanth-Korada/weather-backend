@@ -1,8 +1,12 @@
 # Weather Wonder Backend (GoLang, Postgres)
 
-This project serves as a backend service for weather-related functionalities. It provides various APIs to fetch weather information, maintain search history, and perform CRUD operations on the weather data.
+This project serves as a backend service for weather-wonder app functionalities. It provides various APIs to fetch weather information, maintain search history, and perform CRUD operations on the weather data.
 
-## Features
+<img width="50%" src="https://github.com/Vasanth-Korada/weather-app-frontend/assets/50695446/d5e774fa-38f1-4b7e-9cc5-e1ff1282a228">
+
+[Weather Wonder FullStack App YouTube Demo Link](https://youtu.be/df1Wx9Bwt10)
+
+## API Endpoints and Features
 
 - **POST /create_weather**: Creates a new weather entry.
 - **DELETE /delete_weather/:id**: Deletes the weather entry with the specified ID.
@@ -15,11 +19,14 @@ This project serves as a backend service for weather-related functionalities. It
 - **Fetch Weather**: Retrieve weather information for a specific city.
 - **Search History**: Maintain a history of the user's weather searches.
 - **CRUD Operations**: Allows creating, reading, updating, and deleting weather records.
+- **JWT Authentication**: Used Token-based JWT Authentication for Login, Register and Logout.
+- **Error Handling and Validation**: Added proper error handling and validation.
+- **DB Constraints**: Added appropriate DB constraints like Primary Key, Unique Key, Foreign Key
 
 ## Prerequisites
 
 - Go 
-- MySQL 
+- PostgreSQL
 
 ## Setup & Installation
 
@@ -31,7 +38,7 @@ This project serves as a backend service for weather-related functionalities. It
 
 2. **Setup Database**:
     - Create a database in MySQL named `weathers`.
-    - Import the SQL schema provided in the `sql` directory.
+    - Import the SQL schema provided in the `models` directory.
 
 3. **Environment Variables**: 
     Rename `.env.example` to `.env` and update the variables accordingly.
@@ -52,13 +59,3 @@ This project serves as a backend service for weather-related functionalities. It
     ```
 
 The server will start and listen on the port specified in the `.env` file.
-
-## API Endpoints
-
-- **Register**: `POST /api/register`
-- **Login**: `POST /api/login`
-- **Logout**: `POST /api/logout`
-- **Create Weather Record**: `POST /api/weather`
-- **Get Weather Search History**: `GET /api/history`
-- **Delete Weather Record**: `DELETE /api/weather/:id`
-- **Update Weather Record**: `PUT /api/weather/:id`
