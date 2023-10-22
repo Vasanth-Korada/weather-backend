@@ -10,9 +10,8 @@ This project serves as a backend service for weather-related functionalities. It
 
 ## Prerequisites
 
-- Go (Version: X.XX) [Provide your Go version here]
-- MySQL (Version: X.XX) [Provide your MySQL version here]
-- Any other dependencies...
+- Go 
+- MySQL 
 
 ## Setup & Installation
 
