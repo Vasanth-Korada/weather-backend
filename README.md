@@ -1,4 +1,4 @@
-# Weather Backend Service
+# Weather Wonder Backend (GoLang, Postgres)
 
 This project serves as a backend service for weather-related functionalities. It provides various APIs to fetch weather information, maintain search history, and perform CRUD operations on the weather data.
 
