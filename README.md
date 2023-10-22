@@ -4,8 +4,16 @@ This project serves as a backend service for weather-related functionalities. It
 
 ## Features
 
+- **POST /create_weather**: Creates a new weather entry.
+- **DELETE /delete_weather/:id**: Deletes the weather entry with the specified ID.
+- **PUT /update_weather/:id**: Updates the weather entry with the specified ID.
+- **GET /history**: Retrieves the history of weather entries.
+- **POST /login**: Authenticates a user and starts a session.
+- **POST /register**: Registers a new user account.
+- **POST /logout**: Ends the user's session and logs them out.
+
 - **Fetch Weather**: Retrieve weather information for a specific city.
-- **Search History**: Maintain a history of user's weather searches.
+- **Search History**: Maintain a history of the user's weather searches.
 - **CRUD Operations**: Allows creating, reading, updating, and deleting weather records.
 
 ## Prerequisites
