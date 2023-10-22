@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"os"
 
 	"github.com/Vasanth-Korada/weather-backend/storage"
@@ -13,9 +15,19 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var secretKey = []byte(os.Getenv("gloresoft-samson"))
+var secretKey []byte
 
-func initializeConfig() *storage.Config {
+func initializeConfig() (*storage.Config, error) {
+	requiredEnv := []string{"DB_HOST", "DB_PORT", "DB_PASS", "DB_USER", "DB_SSLMODE", "DB_NAME"}
+
+	for _, v := range requiredEnv {
+		if os.Getenv(v) == "" {
+			return nil, fmt.Errorf("environment variable %s is not set", v)
+		}
+	}
+
+	secretKey = []byte(os.Getenv("gloresoft-samson"))
+
 	return &storage.Config{
 		Host:     os.Getenv("DB_HOST"),
 		Port:     os.Getenv("DB_PORT"),
@@ -23,41 +35,50 @@ func initializeConfig() *storage.Config {
 		User:     os.Getenv("DB_USER"),
 		SSLMode:  os.Getenv("DB_SSLMODE"),
 		DBName:   os.Getenv("DB_NAME"),
-	}
+	}, nil
 }
 
-func handleDBMigrations(db *gorm.DB) {
-	errWeather := models.MigrateWeather(db)
-	HandleError(errWeather, "Could not migrate database")
+func handleDBMigrations(db *gorm.DB) error {
+	if err := models.MigrateWeather(db); err != nil {
+		return fmt.Errorf("could not migrate Weather table: %v", err)
+	}
 
-	errUsers := models.MigrateUsers(db)
-	HandleError(errUsers, "Could not migrate database")
+	if err := models.MigrateUsers(db); err != nil {
+		return fmt.Errorf("could not migrate Users table: %v", err)
+	}
 
+	return nil
 }
 
 func main() {
-	err := godotenv.Load(".env")
-	HandleError(err, "Error loading .env file")
-
-	config := initializeConfig()
-
-	db, err := storage.NewConnection(config)
-	HandleError(err, "Could not load the database")
-
-	handleDBMigrations(db)
-
-	r := repository.Repository{
-		DB: db,
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	app := fiber.New()
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-	}))
+	config, err := initializeConfig()
+	if err != nil {
+		log.Fatalf("Failed to initialize configuration: %v", err)
+	}
 
+	db, err := storage.NewConnection(config)
+	if err != nil {
+		log.Fatalf("Could not establish database connection: %v", err)
+	}
+
+	if err := handleDBMigrations(db); err != nil {
+		log.Fatalf("Database migration error: %v", err)
+	}
+
+	r := repository.Repository{DB: db}
+
+	app := fiber.New()
+	app.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 	app.Use(TokenValidationMiddleware())
 	app.Use(ExtractUserIDFromToken())
 
 	r.SetupRoutes(app)
-	app.Listen(":8080")
+
+	if err := app.Listen(":8080"); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

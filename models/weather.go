@@ -1,6 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"errors"
+	"log"
+
+	"gorm.io/gorm"
+)
 
 type Weather struct {
 	ID          uint     `gorm:"primary key;autoIncrement" json:"id"`
@@ -12,6 +17,14 @@ type Weather struct {
 }
 
 func MigrateWeather(db *gorm.DB) error {
-	err := db.AutoMigrate(&Weather{})
-	return err
+	if db == nil {
+		return errors.New("database connection cannot be nil")
+	}
+
+	if err := db.AutoMigrate(&Weather{}); err != nil {
+		log.Printf("Error migrating Weather model: %v", err)
+		return err
+	}
+
+	return nil
 }

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"log"
 	"os"
 	"time"
@@ -19,16 +20,16 @@ type Credentials struct {
 var secretKey = []byte(os.Getenv("gloresoft-samson"))
 
 func generateToken(userId int) (string, error) {
+	if len(secretKey) == 0 {
+		return "", errors.New("secret key is empty")
+	}
+
 	claims := jwt.MapClaims{
 		"userId": userId,
 		"exp":    time.Now().Add(time.Hour * 24).Unix(), // Token expires in 24 hours
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(secretKey)
-	if err != nil {
-		return "", err
-	}
-	return signedToken, nil
+	return token.SignedString(secretKey)
 }
 
 func (r *Repository) handleLogin(c *fiber.Ctx) error {
@@ -44,6 +45,7 @@ func (r *Repository) handleLogin(c *fiber.Ctx) error {
 
 	token, err := generateToken(user.UserID)
 	if err != nil {
+		log.Printf("Token generation error: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to generate token"})
 	}
 
@@ -51,17 +53,20 @@ func (r *Repository) handleLogin(c *fiber.Ctx) error {
 }
 
 func (r *Repository) handleRegister(c *fiber.Ctx) error {
-	log.Println("Request Headers:", c.Request().Header)
 	var creds Credentials
 	if err := c.BodyParser(&creds); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request payload"})
 	}
 
+	if creds.Username == "" || creds.Password == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Username and Password are required"})
+	}
+
 	err := models.RegisterUser(r.DB, creds.Username, creds.Password, creds.DOB)
 	if err != nil {
+		log.Printf("User registration error: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to register user"})
 	}
-	log.Println("Request Body:", creds)
 
 	return c.Status(fiber.StatusCreated).SendString("User registered successfully")
 }
