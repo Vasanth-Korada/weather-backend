@@ -40,7 +40,7 @@ This project serves as a backend service for weather-related functionalities. It
 
 5. **Run the Server**:
     ```bash
-    go run main.go
+    go run *.go
     ```
 
 The server will start and listen on the port specified in the `.env` file.
