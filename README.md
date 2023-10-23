@@ -2,7 +2,8 @@
 
 This project serves as a backend service for weather-wonder app functionalities. It provides various APIs to fetch weather information, maintain search history, and perform CRUD operations on the weather data.
 
-<img width="50%" src="https://github.com/Vasanth-Korada/weather-app-frontend/assets/50695446/d5e774fa-38f1-4b7e-9cc5-e1ff1282a228">
+<img width="45%" src="https://github.com/Vasanth-Korada/weather-app-frontend/assets/50695446/d5e774fa-38f1-4b7e-9cc5-e1ff1282a228">
+<img width="45%" src="https://github.com/Vasanth-Korada/weather-app-frontend/assets/50695446/b81da453-eb96-4ca2-a0b4-04fa1a5abefd">
 
 [Weather Wonder FullStack App YouTube Demo Link](https://youtu.be/df1Wx9Bwt10)
 
