@@ -2,8 +2,6 @@
 
 This project serves as a backend service for weather-wonder app functionalities. It provides various APIs to fetch weather information, maintain search history, and perform CRUD operations on the weather data.
 
-<img width="50%" src="https://github.com/Vasanth-Korada/weather-app-frontend/assets/50695446/d5e774fa-38f1-4b7e-9cc5-e1ff1282a228">
-
 ## API Endpoints and Features
 
 - **POST /create_weather**: Creates a new weather entry.
